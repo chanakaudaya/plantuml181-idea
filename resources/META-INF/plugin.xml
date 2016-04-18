@@ -1,0 +1,114 @@
+<idea-plugin version="2">
+  <name>PlantUML integration</name>
+  <version>1.8.1</version>
+  <vendor>Eugene Steinberg</vendor>
+  <!-- IJ 12+ -->
+  <idea-version since-build="129.000"/>
+
+  <description>PlantUML diagramming tool integration</description>
+
+  <change-notes>
+    <![CDATA[
+            <p>1.8.1</p>
+            <ul>
+                <li>PlantUml library upgrade to 8027</li>
+                <li>Support for "url of" (Thanks to Andrew Korolev)</li>
+                <li>Reload of a diagram on change in included files</li>
+            </ul>
+            <p>1.8</p>
+            <ul>
+                <li>PlantUml library upgrade to 8026</li>
+                <li>Compatible with IntelliJ 12</li>
+                <li>Reverse Arrow intention (only for PlantUML file types) - place caret on an arrow; Alt+Enter...</li>
+                <li>Enabled block and line comment actions (only for PlantUML file types)</li>
+            </ul>
+            <p>1.7.1</p>
+            <ul>
+                <li>PlantUml library upgrade to 8025</li>
+            </ul>
+            <p>1.7.0</p>
+            <ul>
+                <li>included file is automatically saved before rendering</li>
+                <li>syntax validation fix for !include (no syntax validation after !include is possible for now)</li>
+                <li>PlantUml library upgrade to 8021</li>
+            </ul>
+       ]]>
+  </change-notes>
+  <depends>com.intellij.modules.platform</depends>
+
+  <application-components>
+    <!-- Add your application components here -->
+    <component>
+      <implementation-class>org.plantuml.idea.toolwindow.PlantUmlApplicationComponent</implementation-class>
+    </component>
+  </application-components>
+
+  <project-components>
+    <!-- Add your project components here -->
+    <component>
+      <implementation-class>org.plantuml.idea.toolwindow.PlantUmlProjectComponent</implementation-class>
+    </component>
+  </project-components>
+
+  <actions>
+    <group id="PlantUML.Toolbar" description="PlantUML toolbar">
+      <action id="PlantUML.CopyToClipboard" description="Copy current diagram to clipboard"
+              class="org.plantuml.idea.action.CopyDiagramToClipboardAction"
+              icon="/actions/copy.png" text="Copy current diagram to clipboard"
+      />
+      <action id="PlantUML.SaveToFile" description="Save current diagram only"
+              class="org.plantuml.idea.action.SaveDiagramToFileAction"
+              icon="/actions/menu-saveall.png" text="Save current diagram only"/>
+      <action id="PlantUML.SaveAllToFile" description="Save all diagrams"
+              class="org.plantuml.idea.action.SaveAllDiagramToFileAction"
+              icon="/actions/export.png" text="Save all diagrams in current file"/>
+      <separator/>
+
+      <action id="PlantUML.ZoomIn" description="Zoom In" class="org.plantuml.idea.action.ZoomInAction"
+              icon="/graph/zoomIn.png" text="Zoom In"/>
+      <action id="PlantUML.ZoomOut" description="Zoom In" class="org.plantuml.idea.action.ZoomOutAction"
+              icon="/graph/zoomOut.png" text="Zoom Out"/>
+      <action id="PlantUML.ZoomActual" description="Actual Zoom" class="org.plantuml.idea.action.ZoomActualAction"
+              icon="/graph/actualZoom.png" text="Actual Zoom"/>
+      <separator/>
+      <action id="PlantUML.PrevPage" description="Prev Page" class="org.plantuml.idea.action.PrevPageAction"
+              icon="/actions/back.png" text="Previous Page"/>
+      <action id="PlantUML.SelectPage" description="Select Page" class="org.plantuml.idea.action.SelectPageAction"
+              text="All Pages"/>
+
+      <action id="PlantUML.NextPage" description="Next Page" class="org.plantuml.idea.action.NextPageAction"
+              icon="/actions/forward.png" text="Next Page"/>
+      <separator/>
+
+      <group id="PlantUML.Settings" icon="/general/settings.png" popup="true">
+        <action id="PlantUML.AutoHideToolWindowToggle" class="org.plantuml.idea.action.AutoHideToolWindowToggleAction"
+                text="Auto Show/Hide Tool Window"/>
+        <action id="PlantUML.ShowSettings" class="org.plantuml.idea.action.ShowSettingsAction"
+                text="Open Settings"/>
+      </group>
+
+      <separator/>
+      <action id="PlantUML.About" description="About" icon="/actions/help.png"
+              class="org.plantuml.idea.action.AboutAction" text="About"/>
+    </group>
+
+  </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <intentionAction>
+      <className>org.plantuml.idea.intentions.ReverseArrowIntention</className>
+      <category>plantuml4idea plugin</category>
+    </intentionAction>
+
+    <toolWindow id="PlantUML" icon="/images/uml.png" anchor="right"
+                factoryClass="org.plantuml.idea.toolwindow.PlantUmlToolWindowFactory"/>
+    <fileTypeFactory implementation="org.plantuml.idea.lang.PlantUmlTypeFactory"/>
+    <lang.parserDefinition language="PUML"
+                           implementationClass="org.plantuml.idea.lang.PlantUmlParserDefinition"/>
+    <lang.commenter language="PUML" implementationClass="org.plantuml.idea.lang.PlantUmlCommenter"/>
+    <applicationConfigurable instance="org.plantuml.idea.lang.settings.PlantUmlSettingsPage"/>
+    <applicationService serviceImplementation="org.plantuml.idea.lang.settings.PlantUmlSettings"/>
+    <externalAnnotator implementationClass="org.plantuml.idea.lang.annotator.PlantUmlExternalAnnotator"
+                       language="PUML"/>
+  </extensions>
+</idea-plugin>
